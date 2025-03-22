@@ -1,4 +1,4 @@
-# Ignore Python cache
+# Ignore Python cache files
 __pycache__/
 *.pyc
 *.pyo
@@ -7,10 +7,13 @@ __pycache__/
 .env
 *.env
 
-# Ignore virtual environment
-venv/
-.env/
-
 # Ignore system files
 .DS_Store
+Thumbs.db
+
+# Ignore virtual environment
+venv/
+
+# Ignore logs and database files
 *.log
+*.sqlite3
