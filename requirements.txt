@@ -200,3 +200,11 @@ widgetsnbextension==4.0.13
 yarl==1.18.3
 zipp==3.21.0
 zstandard==0.23.0
+
+python-telegram-bot==20.8
+aiohttp==3.9.5
+requests
+openai
+flask
+asyncio
+
