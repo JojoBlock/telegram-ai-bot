@@ -2,13 +2,12 @@ import logging
 import aiohttp
 import asyncio
 import os
-from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
 
-# 🔑 API Keys (Securely Loaded from .env)
-TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+# 🔑 API Keys (Render Environment Variables)
+TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
+OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
 
 # 🌐 OpenRouter API Config
 BASE_URL = "https://openrouter.ai/api/v1"
@@ -68,7 +67,7 @@ async def handle_message(update: Update, context: CallbackContext) -> None:
 def main() -> None:
     """Bot ko run karne ka main function."""
     if not TELEGRAM_BOT_TOKEN or not OPENROUTER_API_KEY:
-        logger.error("⚠️ API keys are missing! Check your .env file or add keys manually.")
+        logger.error("⚠️ API keys are missing! Add them in Render Environment Variables.")
         return
 
     app = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
