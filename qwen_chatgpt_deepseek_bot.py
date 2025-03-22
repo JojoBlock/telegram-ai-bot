@@ -9,9 +9,9 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters, C
 # 📌 Load environment variables from .env file
 load_dotenv()
 
-# 🔑 API Keys (⚠️ Keep them secret!)
-TELEGRAM_BOT_TOKEN = "7909627028:AAFBua1Sa2MRGHKL88G3EEZ_JOVYaqDsFGU"
-OPENROUTER_API_KEY = "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"
+# 🔑 API Keys (Securely Loaded from .env)
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
 # 🌐 OpenRouter API Config
 BASE_URL = "https://openrouter.ai/api/v1"
@@ -54,16 +54,7 @@ async def chat_with_ai(user_message: str) -> str:
 # 📜 Command Handlers
 async def start(update: Update, context: CallbackContext) -> None:
     """User ke liye welcome message."""
-    welcome_text = (
-        "🎉 **Welcome!**\n\n"
-        "🤖 *I'm your AI Assistant!* I can help you with:\n"
-        "🔹 Casual chat (Friendly Talk 🤝)\n"
-        "🔹 Coding & Debugging (Python, JavaScript, etc. 💻)\n"
-        "🔹 AI & Prompt Engineering (Text-to-Image, AI Tips 🤖🎨)\n"
-        "🔹 Knowledge & Facts (History, Science, Tech 📚)\n"
-        "🔹 Creative Writing (Stories, Poems, Ideas ✍️)\n\n"
-        "🚀 *Just send a message and let's start!*"
-    )
+    welcome_text = "🎉 **Welcome!**\n\n🤖 *I'm your AI Assistant!* Just send a message and let's start!"
     await update.message.reply_text(welcome_text, parse_mode="Markdown", disable_web_page_preview=True)
 
 async def handle_message(update: Update, context: CallbackContext) -> None:
