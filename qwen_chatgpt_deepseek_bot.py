@@ -11,7 +11,7 @@ load_dotenv()
 
 # 🔑 API Keys (⚠️ Keep them secret!)
 TELEGRAM_BOT_TOKEN = "7909627028:AAFBua1Sa2MRGHKL88G3EEZ_JOVYaqDsFGU"
-OPENROUTER_API_KEY = "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"
+OPENROUTER_API_KEY = "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"
 
 # 🌐 OpenRouter API Config
 BASE_URL = "https://openrouter.ai/api/v1"
