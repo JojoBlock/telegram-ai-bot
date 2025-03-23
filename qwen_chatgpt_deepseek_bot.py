@@ -17,39 +17,35 @@ MODEL = "qwen/qwq-32b:free"
 logging.basicConfig(format="%(asctime)s - %(levelname)s - %(message)s", level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# 🤖 AI Chat Function with Error Handling & Retry
+# 🤖 AI Chat Function
 async def chat_with_ai(user_message: str) -> str:
-    """OpenRouter AI se chat response lene ka function with error handling."""
-    system_prompt = "You are a helpful AI assistant. Answer concisely."
+    """OpenRouter AI se chat response lene ka function."""
+    try:
+        system_prompt = "You are a helpful AI assistant. Answer concisely."
 
-    headers = {
-        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-        "Content-Type": "application/json",
-        "HTTP-Referer": "https://t.me/ok_deepseek_bot",
-        "X-Title": "qwen_chatgpt_deepseek_bot"
-    }
+        headers = {
+            "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+            "Content-Type": "application/json",
+            "HTTP-Referer": "https://t.me/ok_deepseek_bot",
+            "X-Title": "qwen_chatgpt_deepseek_bot"
+        }
 
-    data = {
-        "model": MODEL,
-        "messages": [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_message}
-        ]
-    }
-
-    async with aiohttp.ClientSession() as session:
-        for attempt in range(3):  # 🔁 Retry up to 3 times if an error occurs
-            try:
-                async with session.post(f"{BASE_URL}/chat/completions", json=data, headers=headers) as response:
-                    response_json = await response.json()
-                    if response.status == 200:
-                        return response_json.get("choices", [{}])[0].get("message", {}).get("content", "😴 I'm resting. Try again!").strip()
-                    logger.warning(f"API Error (Attempt {attempt+1}): {response.status} - {response_json}")
-            except Exception as e:
-                logger.error(f"AI Chat Error (Attempt {attempt+1}): {str(e)}")
-            await asyncio.sleep(2)  # ⏳ Wait before retrying
-
-    return "❌ AI response failed after multiple attempts. Try again later."
+        data = {
+            "model": MODEL,
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_message}
+            ]
+        }
+        
+        async with aiohttp.ClientSession() as session:
+            async with session.post(f"{BASE_URL}/chat/completions", json=data, headers=headers) as response:
+                response_json = await response.json()
+                return response_json.get("choices", [{}])[0].get("message", {}).get("content", "😴 I'm resting. Try again!").strip()
+    
+    except Exception as e:
+        logger.error(f"AI Chat Error: {str(e)}")
+        return f"❌ Error: {str(e)}"
 
 # 📜 Command Handlers
 async def start(update: Update, context: CallbackContext) -> None:
@@ -59,10 +55,7 @@ async def start(update: Update, context: CallbackContext) -> None:
 
 async def handle_message(update: Update, context: CallbackContext) -> None:
     """User ke messages handle karega."""
-    user_message = update.message.text.strip()
-    if not user_message:
-        return  # ⚠️ Prevents empty message errors
-
+    user_message = update.message.text
     typing_msg = await update.message.reply_text("⌛ Thinking...")
 
     ai_response = await chat_with_ai(user_message)
